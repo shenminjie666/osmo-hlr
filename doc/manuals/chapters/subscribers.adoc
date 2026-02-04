@@ -1,0 +1,209 @@
+== Managing Subscribers
+
+Subscribers are kept in a local SQLite database file and can be managed via VTY
+and CTRL interfaces.
+
+This section provides some examples; also refer to the OsmoHLR VTY reference
+manual <<vty-ref-osmohlr>> as well as the Control interface described in
+<<hlr-ctrl>>.
+
+=== Example: Add/Update/Delete Subscriber via VTY
+
+The following telnet VTY session adds a subscriber complete with GSM (2G) and
+UMTS (3G and 2G) authentication tokens, and finally removes the subscriber
+again; it assumes that osmo-hlr is running and listening for telnet VTY
+connections on localhost:
+
+----
+$ telnet localhost 4258
+include::../example_subscriber_add_update_delete.vty[]
+----
+
+[[subscriber-params]]
+=== Subscriber Parameters
+
+The following parameters are managed for each subscriber of the HLR, modelled
+roughly after 3GPP TS 23.008, version 13.3.0; note that not all of these
+parameters are necessarily in active use.
+
+The `aud3g` table also applies to 2G networks: it provides UMTS AKA tokens for
+Milenage authentication, which is available both on 3G and 2G networks. On 2G,
+when both MS and network are R99 capable (like OsmoMSC and OsmoSGSN are), the
+full UMTS AKA with Milenage keys from `aud_3g`, using AUTN and extended RES
+tokens, is available. With pre-R99 MS or network configurations, the GSM AKA
+compatible variant of Milenage, still using the Milenage keys from `aud_3g` but
+transceiving only RAND and SRES, may be applicable. (See 3GPP TS 33.102, chapter
+6.8.1, Authentication and key agreement of UMTS subscribers.)
+
+.OsmoHLR's subscriber parameters
+[options="header",width="100%",cols="20%,20%,60%"]
+|===
+|Name|Example|Description
+|imsi|901700000014701|identity of the SIM/USIM, 3GPP TS 23.008 chapter 2.1.1.1
+|msisdn|2342123|number to dial to reach this subscriber (multiple MSISDNs can be stored per subscriber), 3GPP TS 23.008 chapter 2.1.2
+|imeisv|4234234234234275|identity of the mobile device and software version, 3GPP TS 23.008 chapter 2.2.3
+|aud2g.algo|comp128v3|Authentication algorithm ID for GSM AKA, corresponds to enum osmo_auth_algo
+|aud2g.ki||Subscriber's secret key (128bit)
+|aud3g.algo|milenage|Authentication algorithm ID for UMTS AKA (applies to both 3G and 2G networks), corresponds to enum osmo_auth_algo
+|aud3g.k|(32 hexadecimal digits)|Subscriber's secret key (128bit)
+|aud3g.op|(32 hexadecimal digits)|Operator's secret key (128bit)
+|aud3g.opc|(32 hexadecimal digits)|Secret key derived from OP and K (128bit), alternative to using OP which does not disclose OP to subscribers
+|aud3g.sqn|123|Sequence number of last used key (64bit unsigned)
+|aud3g.ind_bitlen|5|Nr of index bits at lower SQN end
+|apn||
+|vlr_number||3GPP TS 23.008 chapter 2.4.5
+|msc_number||3GPP TS 23.008 chapter 2.4.6
+|sgsn_number||3GPP TS 23.008 chapter 2.4.8.1
+|sgsn_address||3GPP TS 23.008 chapter 2.13.10
+|ggsn_number||3GPP TS 23.008 chapter 2.4.8.2
+|gmlc_number||3GPP TS 23.008 chapter 2.4.9.2
+|smsc_number||3GPP TS 23.008 chapter 2.4.23
+|periodic_lu_tmr||3GPP TS 23.008 chapter 2.4.24
+|periodic_rau_tau_tmr||3GPP TS 23.008 chapter 2.13.115
+|nam_cs|1|Enable/disable voice access (3GPP TS 23.008 chapter 2.1.1.2: network access mode)
+|nam_ps|0|Enable/disable data access (3GPP TS 23.008 chapter 2.1.1.2: network access mode)
+|lmsi||3GPP TS 23.008 chapter 2.1.8
+|ms_purged_cs|0|3GPP TS 23.008 chapter 2.7.5
+|ms_purged_ps|1|3GPP TS 23.008 chapter 2.7.6
+|===
+
+=== Configuring the Subscribers Create on Demand Feature
+
+Usually a HLR will only allow mobile equipment (ME) on the network, if the HLR
+has a subscriber entry with the ME's IMSI. But OsmoHLR can also be configured to
+automatically create new entries for new IMSIs, with the
+`subscriber-create-on-demand` VTY option. The obvious use case is creating the
+new subscriber entry and then allowing the ME to use both the CS
+(Circuit Switched) and PS (Packet Switched) NAM (Network Access Mode).
+
+.osmo-hlr.cfg
+----
+hlr
+ subscriber-create-on-demand 5 cs+ps
+----
+
+On the other hand, operators might only want to give network access to IMSIs, of
+which they know the owner. In order to do that, one can set the default NAM to
+`none` and manually approve new subscribers by changing the NAM (e.g. over the
+VTY, see the example below).
+
+Oftentimes it is hard to know, which IMSI belongs to which ME, but the IMEI is
+readily available. If you configure your MSC to send IMEI checking requests to
+the HLR, before sending location update requests, the subscribers created on
+demand can also have the IMEI stored in the HLR database. With OsmoMSC, this
+is done by writing `check-imei-rqd early` in the `msc` section of osmo-msc.cfg.
+Then enable storing the IMEI when receiving check IMEI requests with
+`store-imei` in the OsmoHLR configuration.
+
+.osmo-msc.cfg
+----
+msc
+ check-imei-rqd early
+----
+
+.osmo-hlr.cfg
+----
+hlr
+ subscriber-create-on-demand 5 none
+ store-imei
+----
+
+.Example: Enabling CS and PS NAM via VTY for a known IMEI
+----
+OsmoHLR> enable
+OsmoHLR# subscriber imei 35761300444848 show
+    ID: 1
+    IMSI: 123456789023000
+    MSISDN: 58192 <1>
+    IMEI: 35761300444848
+    CS disabled <2>
+    PS disabled <2>
+OsmoHLR# subscriber imei 35761300444848 update network-access-mode cs+ps
+OsmoHLR# subscriber imei 35761300444848 show
+    ID: 1
+    IMSI: 123456789023000
+    MSISDN: 58192
+    IMEI: 35761300444848
+----
+<1> Randomly generated 5 digit MSISDN
+<2> Disabled CS and PS NAM prevent the subscriber from accessing the network
+
+
+=== Import Subscriber Data
+
+==== Scripted Import
+
+WARNING: It is not generally a good idea to depend on the HLR database's internal table structure, but in the lack of an
+automated import procedure, this example is provided as an ad-hoc method to aid automated subscriber import. This is not
+guaranteed to remain valid.
+
+NOTE: We may add CSV and other import methods to the `osmo-hlr-db-tool`, but so far that is not implemented. Contact the
+community if you are interested in such a feature being implemented.
+
+NOTE: `sqlite3` is available from your distribution packages or `sqlite.org`.
+
+Currently, probably the easiest way to automatically import subscribers to OsmoHLR is to write out a text file with SQL
+commands per subscriber, and feed that to `sqlite3`, as described below.
+
+A difficulty is to always choose subscriber IDs that are not yet in use. For an initial import, the subscriber ID may be
+incremented per subscriber record. If adding more subscribers to an existing database, it is necessary to choose
+subscriber IDs that are not yet in use. Get the highest ID in use with:
+
+----
+sqlite3 hlr.db 'select max(id) from subscriber'
+----
+
+A full SQL example of adding a single subscriber with id 23, IMSI 001010123456789, MSISDN 1234, Ki for COMP128v1, and K
+and OPC for Milenage:
+
+----
+INSERT subscriber (id, imsi, msisdn) VALUES (23, '001010123456789', '1234');
+
+INSERT INTO auc_2g (subscriber_id, algo_id_2g, ki)
+VALUES(23, 1, '0123456789abcdef0123456789abcdef');
+
+INSERT INTO auc_3g (subscriber_id, algo_id_3g, k, op, opc)
+VALUES(23, 5, '0123456789abcdef0123456789abcdef',NULL,'0123456789abcdef0123456789abcdef');
+----
+
+Table entries to `auc_2g` and/or `auc_3g` may be omitted if no such key material is required.
+
+UMTS Milenage auth (on both 2G and 3G RAN) is configured by the `auc_3g` table. `algo_id_3g` must currently always be 5
+(MILENAGE).
+
+The algorithm IDs for `algo_id_2g` and `algo_id_3g` are:
+
+.Algorithm IDs in OsmoHLR's database
+[options="header",width="50%",cols="40%,60%"]
+|===
+|`algo_id_2g` / `algo_id_3g` | Authentication Algorithm
+| 1 | COMP128v1
+| 2 | COMP128v2
+| 3 | COMP128v3
+| 4 | XOR
+| 5 | MILENAGE
+|===
+
+Create an empty HLR database with
+
+----
+osmo-hlr-db-tool -l hlr.db create
+----
+
+Repeat above SQL commands per subscriber, incrementing the subscriber ID for each block, then feed the SQL commands for
+the subscribers to be imported to the `sqlite3` command line tool:
+
+----
+sqlite3 hlr.db < subscribers.sql
+----
+
+[[db_import_nitb]]
+==== Import OsmoNITB database
+
+To upgrade from old OsmoNITB to OsmoHLR, use `osmo-hlr-db-tool`:
+
+----
+osmo-hlr-db-tool -l hlr.db import-nitb-db nitb.db
+----
+
+Be aware that the import is lossy, only the IMSI, MSISDN, nam_cs/ps and 2G auth data are set.

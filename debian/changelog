@@ -1,0 +1,679 @@
+osmo-hlr (1.9.1) unstable; urgency=medium
+
+  [ Pau Espin Pedrol ]
+  * Drop use of deprecated vty is_config_node() cb
+
+  [ Oliver Smith ]
+  * db: flush after changing schema version
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 02 Apr 2025 15:12:35 +0200
+
+osmo-hlr (1.9.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * subscriber-create-on-demand: rework configuration
+  * subscriber-create-on-demand: add mode for MSISDN=IMSI
+
+  [ Alexander Couzens ]
+  * gsupclient: Introduce gsup_client_mux
+  * gsupclient: add missing SPDX line
+  * debian/copyright: add gsup_client under GPLv2+
+
+  [ Pau Espin Pedrol ]
+  * gsup: Replace deprecated ipa_msg_push_header()
+  * jenkins.sh: libosmo-netif no longer depends on libosmo-abis
+  * Drop use of libosmo-abis osmocom/abis/ipaccess.h
+  * gsup_client: Add new APIs to avoid users accessing struct fields
+  * gsup_client: Avoid double memset 0
+  * Drop unneeded use of abis/ipa.h header
+  * jenkins.sh: Use --disable-doxygen configure param
+
+  [ Mychaela N. Falconia ]
+  * vty: always emit reject-cause lines in saved config
+  * change default reject cause to plmn-not-allowed
+  * change default no-proxy reject cause to net-fail
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 12 Feb 2025 12:17:52 +0100
+
+osmo-hlr (1.8.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * hlr_vty.c: drop redundant include of hlr_ussd.h
+  * build: include {README.md,git-version-gen} into the release tarball
+  * README.md: cosmetic: fix a typo
+
+  [ Mychaela N. Falconia ]
+  * SMS over GSUP: implement vty config of SMSC routing
+  * SMS over GSUP: implement forwarding of MO SMS
+  * SMS over GSUP: implement forwarding of MT SMS
+  * SMS over GSUP: handle READY-FOR-SM.req from MSCs
+  * ctrl: add subscriber.by-*.imsi GET-able variable
+
+  [ Andreas Eversberg ]
+  * Use uniform log format for default config files
+
+  [ Harald Welte ]
+  * Add funding link to github mirror
+  * README.md: Improve mark-down formatting
+  * README.md: Add Forum and Issue Tracker sections
+
+  [ Max ]
+  * .deb/.rpm: add osmocom user during package install
+
+  [ Oliver Smith ]
+  * .deb/.rpm: various fixes related to non-root
+  * contrib: remove rpm spec file
+  * debian/postinst: add checks, be verbose
+  * mslookup: don't ignore return value of write()
+
+ -- Oliver Smith <osmith@sysmocom.de>  Wed, 24 Jul 2024 15:29:12 +0200
+
+osmo-hlr (1.7.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * Run struct_endianness.py
+  * tests/db/db_test.err: adjust to XOR-3G rename
+  * debian: set compat level to 10
+  * systemd: depend on networking-online.target
+
+  [ Pau Espin Pedrol ]
+  * mslookup: Call osmo_fd_unregister() before closing and changing bfd->fd
+
+  [ Vadim Yanitskiy ]
+  * tests/auc/Makefile.am: put object files to LDADD
+  * tests/*/Makefile.am: move -I to AM_CPPFLAGS
+  * lu_fsm: fix memleak in lu_fsm_wait_insert_data_result()
+  * ussd: fix GSUP memleaks in rx_proc_ss_{req,error}()
+  * gsup_server: fix msgb memleak in osmo_gsup_server_read_cb()
+  * USSD: fix handling of ussd-DataCodingScheme != 0x0f
+
+  [ Alexander Couzens ]
+  * hlr: use talloc for memory allocation in osmo_gsup_create_insert_subscriber_data_msg
+  * Add support for multiple APN profiles for subscriber data
+
+  [ Harald Welte ]
+  * Introduce support for XOR-2G algorithm
+  * cosmetic: gen_ts_55_205_test_sets/func_template.c: Use tab-indent
+  * cosmetic: gen_ts_55_205_test_sets/main_template tabs istead of spaces
+  * Port to new libosmogsm 'struct osmo_sub_auth_data2'
+  * src/db.c: Switch from "const char *statements" to "const char * const"
+  * db: extend database schema to support 256bit K and/or OP[c] values
+  * Add VTY support for TUAK algorithm
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 12 Sep 2023 14:41:33 +0200
+
+osmo-hlr (1.6.0) unstable; urgency=medium
+
+  [ Vadim Yanitskiy ]
+  * db_auc: hexparse_stmt(): check value returned by osmo_hexparse()
+
+  [ Max ]
+  * Set working directory in systemd service file
+  * Ignore .deb build byproducts
+  * Debian: bump copyright year to match current
+  * Debian: reformat package description
+  * systemd: enable basic hardening
+  * Debian: install osmo-hlr-dgsm.cfg as example config
+  * hlr_vty.c: fix typo
+  * ctrl: take both address and port from vty config
+
+  [ Harald Welte ]
+  * Support building with -Werror=strict-prototypes / -Werror=old-style-definition
+  * Add -Werror=implicit-int -Werror=int-conversion -Werror=old-style-definition
+
+  [ arehbein ]
+  * osmo-hlr: Transition to use of 'telnet_init_default'
+
+  [ Oliver Smith ]
+  * osmo_mdns_rfc_record_decode: check ret of talloc
+  * osmo_mdns_rfc_record_decode: proper free on err
+  * mslookup: use apn functions from libosmocore
+  * osmo_mdns_rfc_record/question_encode: remove ctx
+
+  [ Keith ]
+  * Vty: Fixup config shown/written from vty
+
+  [ Neels Hofmeyr ]
+  * fix memleak of proxy_subscr_listentry
+
+  [ Alexander Couzens ]
+  * Add vty `reject-cause` to set the reject cause
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 07 Feb 2023 16:49:14 +0100
+
+osmo-hlr (1.5.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * treewide: remove FSF address
+
+  [ Vadim Yanitskiy ]
+  * fixup: debian: remove unneeded dependency libdbd-sqlite3
+  * debian: add new 'osmo-mslookup-utils' package
+  * tests: use 'check_PROGRAMS' instead of 'noinst_PROGRAMS'
+
+  [ Pau Espin Pedrol ]
+  * ctrl: Mark function as static
+  * tests: Allow specyfing specific ctrl test to run
+  * tests/ctrl: Move ERROR test scenario to proper file
+  * Fix db_subscr_create() not returning -EEXIST expected by VTY subscriber create cmd
+  * ctrl: Introduce cmd SET subscriber.create <imsi>
+  * ctrl: Introduce CTRL command subscriber.by-*.msisdn
+  * cosmetic: hlr_vty_subscr.c: Fix trailing whitespace
+  * ctrl: Introduce cmd SET subscriber.delete <imsi>
+  * ctrl: Introduce CTRL command subscriber.by-*.aud2g <algo[,ki]>
+  * ctrl: Introduce CTRL command subscriber.by-*.aud3g <algo[,KI,(op|opc),OP_C[,ind_bitlen]]>
+  * doc: Document new subscriber CTRL commands
+
+  [ Harald Welte ]
+  * update git URLs (git -> https; gitea)
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 28 Jun 2022 18:38:31 +0200
+
+osmo-hlr (1.4.0) unstable; urgency=medium
+
+  [ Keith ]
+  * Correct configuration written from vty
+  * vty: enable show subscribers filtered by IMEI
+
+  [ Harald Welte ]
+  * add README.md file as customary for cgit, github, gitlab, etc.
+
+  [ Oliver Smith ]
+  * Add post-upgrade script for automatic db upgrade
+  * debian/control: remove dh-systemd build-depend
+
+  [ Pau Espin Pedrol ]
+  * db: Avoid use uninitialized rc if running 0 statements
+
+  [ Neels Hofmeyr ]
+  * db v6: determine 3G AUC IND from VLR name
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 16 Nov 2021 14:56:41 +0100
+
+osmo-hlr (1.3.0) unstable; urgency=medium
+
+  [ Alexander Couzens ]
+  * hlr: respect the num_auth_vectors requested
+  * hlr: remove unused internal USSD list
+
+  [ Oliver Smith ]
+  * add libosmo-mslookup abstract client
+  * add mDNS lookup method to libosmo-mslookup
+  * Makefile.am: fix pkgconfig_DATA
+  * add mDNS lookup method to libosmo-mslookup (#2)
+  * contrib/dgsm/ add example esme and dialplan
+  * mslookup_client.c: fix dereferencing null pointer
+  * mdns_msg.c: always call va_end
+  * mslookup_client_mdns.c: fix dereferencing null
+  * osmo-mslookup-client.c: fix dereferencing null
+  * osmo-mslookup-client: fix dereferencing null
+  * mdns_sock.c: fix resource leak of sock
+  * mdns_rfc.c: fix possible access of uninit. mem
+  * mslookup_client_mdns_test: disable by default
+  * mslookup_client_mdns_test: no automatic skip
+  * Cosmetic: mention OS#4491 in location cancel code
+  * hlr_vty_subscr: prettier output for last LU seen
+  * contrib: import RPM spec
+  * contrib: integrate RPM spec
+  * Makefile.am: EXTRA_DIST: debian, contrib/*.spec.in
+  * contrib/jenkins: don't build osmo-gsm-manuals
+  * configure.ac: set -std=gnu11
+
+  [ Neels Hofmeyr ]
+  * add osmo-mslookup-client program
+  * add osmo-mslookup-client program (#2)
+  * fix missing braces in LOGP_GSUP_FWD
+  * gsup_client.c: fix deprecation for client create func
+  * 1/2: refactor: add and use lu_fsm, osmo_gsup_req, osmo_ipa_name
+  * 2/2: wrap ipa_name in osmo_cni_peer_id with type enum and union
+  * gsup client: add up_down_cb(), add osmo_gsup_client_create3()
+  * db v5: prep for D-GSM: add vlr_via_proxy and sgsn_via_proxy
+  * enlarge the GSUP message headroom
+  * test_nodes.vty: remove cruft
+  * D-GSM 1/n: add mslookup server in osmo-hlr
+  * D-GSM 2/n: implement mDNS method of mslookup server
+  * D-GSM 3/n: implement roaming by mslookup in osmo-hlr
+  * gsup_server: send routing error back to the correct peer
+  * adoc: add D-GSM chapter to osmohlr-usermanual
+  * drop error log for when a subscriber does not exist
+  * vty: show subscriber: change format of 'last LU seen'
+  * vty: show subscriber: show lu d,h,m,s ago, not just seconds
+  * auc3g: officially wrap IND around IND_bitlen space
+  * make osmo_cni_peer_id_cmp() NULL safe
+  * osmo_gsup_req_new(): require from_peer != NULL
+  * gsup_server.c: properly handle negative rc from osmo_gsup_conn_ccm_get()
+  * osmo_mslookup_server_mdns_rx(): handle read() rc == 0
+  * hlr_subscr_nam(): fix condition to fix nam=false notifications
+  * esme_dgsm.py: add --always-fail option for debugging SMPP
+  * osmo-mslookup-client: fix segfault for respond_error() caller
+  * manual: describe subscriber import by SQL
+
+  [ Harald Welte ]
+  * Revert "add osmo-mslookup-client program"
+  * Revert "add mDNS lookup method to libosmo-mslookup"
+  * Use OSMO_FD_* instead of deprecated BSC_FD_*
+  * support the XOR algorithm for UMTS AKA
+  * auc_test.c: Add some comments on what the test cases actually do
+  * main: add --vty-ref-mode, use vty_dump_xml_ref_mode()
+  * manuals: generate vty reference xml at build time
+
+  [ Vadim Yanitskiy ]
+  * db: fix possible SQLite3 allocated memory leak in db_open()
+  * gsup_server: fix typo: s/omso_gsup_message/osmo_gsup_message/
+  * debian/control: change maintainer to the Osmocom team / mailing list
+  * cosmetic: fix spelling in logging message: existAnt -> existEnt
+  * doc/manuals: fix s/There/The/ in 'USSD Configuration'
+  * doc/manuals: re-organize description of internal USSD handlers
+  * USSD: fix handle_ussd(): do not free() unconditionally
+  * USSD: add special 'idle' handler to IUSE for testing
+
+  [ Eric ]
+  * configure.ac: fix libtool issue  with clang and sanitizer
+
+  [ Philipp Maier ]
+  * doc: do not use loglevel info for log category ss
+
+  [ Pau Espin Pedrol ]
+  * configure.ac: Fix trailing whitespace
+  * doc: Update VTY reference xml file
+  * Support setting rt-prio and cpu-affinity mask through VTY
+  * Set TCP NODELAY sockopt to GSUP cli and srv connections
+  * contrib/jenkins: Enable parallel make in make distcheck
+  * .gitignore: Ignore new autofoo tmp files
+  * tests: Replace deprecated API log_set_print_filename
+
+  [ Keith ]
+  * osmo-hlr-db-tool: Make import from osmo-nitb less "lossy"
+  * Correct vty inline help for show subscriber
+  * Add vty command to show summary of all or filtered subscribers
+  * Fix Coverity Warnings
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Tue, 23 Feb 2021 18:13:53 +0100
+
+osmo-hlr (1.2.0) unstable; urgency=medium
+
+  [ Ruben Undheim ]
+  * Fix test for return codes on mipsel and alpha archs
+
+  [ Thorsten Alteholz ]
+  * fix spelling errors detected by lintian
+
+  [ Pau Espin Pedrol ]
+  * tests: Fix db_test err file to expect error code name instead of value
+
+  [ Oliver Smith ]
+  * tests/test_nodes.vty: check less libosmocore cmds
+  * tests/db_upgrade: disable for old sqlite versions
+  * gitignore: add tests/db_upgrade/*.dump
+  * gsup_client.h: fix license header: GPLv2+
+  * tests/auc: change back to python3
+
+  [ Neels Hofmeyr ]
+  * fix double free in osmo_gsup_client_enc_send()
+  * db upgrade to v2: log version 2, not 1
+  * fix upgrade to version 2: imei column default value
+  * add --db-check option
+  * hlr.sql: move comment
+  * add db_upgrade test
+  * hlr db schema 3: hlr_number -> msc_number
+  * db.c: code dup: add db_run_statements() for arrays of statements
+  * move headers to include/osmocom/hlr
+  * fix upgrade test in presence of ~/.sqliterc
+  * db upgrade: remove some code dup
+  * add osmo_gsup_msgb_alloc()
+  * Makefile convenience: add VTY_TEST var to run only one test
+  * remove gsup_test
+  * test_nodes.vty: tweak: add some '?' checks
+  * db v4: add column last_lu_seen_ps
+
+  [ Harald Welte ]
+  * AUC: Add support for setting the AMF separation bit to '1' for EUTRAN
+  * hlr: exit(2) on unsupported positional arguments on command line
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 03 Jan 2020 12:37:35 +0100
+
+osmo-hlr (1.1.0) unstable; urgency=medium
+
+  [ Oliver Smith ]
+  * docs: running: document --db-upgrade
+  * Add IMEI column to subscriber table
+  * Optionally store IMEI in subscriber table
+  * VTY tests: fill DB before running test
+  * VTY: integrate IMEI
+  * hlr.c: replace deprecated osmo_gsup_get_err_msg_type()
+  * hlr.c: move hlr_ctx to the top
+  * tests: use -no-install libtool flag to avoid ./lt-* scripts
+  * Cosmetic: gsup_route_find: comment addr, addrlen
+  * USSD: save MO USSD's originating MSC's vlr_number
+  * USSD: don't use gsm0480_msgb_alloc_name()
+  * hlr.c: forward GSUP messages between clients
+  * db_hlr.c: db_subscr_create(): add flags argument
+  * db_hlr.c: add db_subscr_exists_by_imsi()
+  * Create subscribers on demand
+  * Document subscribers create on demand feature
+  * debian: create -doc subpackage with pdf manuals
+  * db_test: set timezone to work around mktime bug
+  * db_hlr: zero-initialize "struct tm"
+  * rx_check_imei_req(): fix IMEI bounds checking
+  * contrib/jenkins.sh: run "make maintainer-clean"
+  * VTY: add subscriber update network-access-mode
+  * manuals: improve subscribers create on demand
+  * gitignore: ignore everything generated in db_test
+  * db_auc.c: verify hex key sizes read from DB
+
+  [ Max ]
+  * Log ip:port when adding GSUP routes
+  * Add link to project wiki to .service file
+  * Enable statsd support
+
+  [ Vadim Yanitskiy ]
+  * hlr.c: properly terminate the process on SIGTERM
+  * hlr.c: fix: also store the session state in read_cb_forward()
+  * hlr.c: fix: properly print the original message type in read_cb_forward()
+  * hlr.c: check the presence of msgb->l2h in read_cb()
+  * hlr.c: fix possible msgb memleaks in read_cb()
+  * db_hlr.c: add db_subscr_exists_by_msisdn()
+  * src/db.h: use GSM23003_MSISDN_MAX_DIGITS for MSISDN buffer size
+  * src/hlr.c: fix deprecation warning: use gsm48_decode_bcd_number2()
+  * hlr_ussd.c: fix: properly pass invokeID in handle_ussd_own_msisdn()
+  * hlr_ussd.c: rx_proc_ss_req(): fix NULL pointer dereference
+  * build: fix mess with 'db_test_SOURCES' and 'db_test_LDADD'
+  * tests/db_test: close the database when test is finished
+  * src/db.c: integrate SQLite3 with talloc allocator
+
+  [ Neels Hofmeyr ]
+  * USSD: fix routing to multiple MSC
+  * fix error logging for GSUP route
+  * add missing error log: invalid IMSI
+  * osmo-hlr: allow configuring db path from cfg file
+  * use new OSMO_IMSI_BUF_SIZE
+
+  [ Daniel Willmann ]
+  * manuals: Add script to update vty/counter documentation from docker
+  * manuals: Update vty documentation
+
+  [ Pau Espin Pedrol ]
+  * Remove undefined param passed to logging_vty_add_cmds
+  * configure.ac: Require libosmocore 1.2.0
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Wed, 07 Aug 2019 16:14:23 +0200
+
+osmo-hlr (1.0.0) unstable; urgency=medium
+
+  [ Stefan Sperling ]
+  * move creation of insert subscriber data messages to a common function
+
+  [ Harald Welte ]
+  * Return proper GSUP error in case of too short IMSI
+  * disable blind subscriber insertion into every VLR/SGSN
+  * gsup_server: Add "priv" pointer and make it point to 'struct hlr'
+  * move osmo_gsup_addr_send() declaration from luop.h to gsup_router.h
+  * gsup_router: Use "#pragma once" and add missing #includes
+  * Add "show gsup-connections" VTY command
+  * import gsup_client.c as new libosmo-gsup-client
+  * gsup_client: rename gsup_client_* to osmo_gsup_client_*
+  * GSUP: Log GSUP route add/remove
+  * hlr: Export + Declare global g_hlr symbol
+  * USSD: Add Core USSD handling + VTY routing config to HLR
+  * USSD: Add basic dispatch + decode of GSUP-encapsulated SS/USSD
+  * hlr_ussd: Introduce LOGPSS() macro
+  * USSD: Send ReturnError component if USSD Code unknown / EUSE disconnected
+  * USSD: Further unification of log output; Use LOGPSS when possible
+  * osmo-hlr.cfg: Don't enable DEBUG logging by default
+  * USSD: Add new "DSS" logging category and use it appropriately
+  * USSD: fix null-pointer deref in "default-route" vty/config cmd
+  * Add osmo-euse-demo as minimalistic test of a External USSD (EUSE) handler
+  * USSD: Add support for internal USSD handlers
+  * debian: Add sub-package for libosmo-gsup-client
+  * pkg-config: Fix libosmo-gsup-client pkg-config file
+  * gitignore: Add .tarball-version
+  * debian: Make libosmo-gsup-client-dev depend on libosmo-gsup-client0
+  * USSD: Fix "ussd default-route"
+  * libosmo-gsup-client: License is GPLv2-or-later
+  * osmo-hlr.cfg: Ensure well-formed config file example
+  * test_nodes.vty: Since libosmocore 1.0.0, we only have one space
+
+  [ Martin Hauke ]
+  * sql/Makefile.am: Make docsdir completely configurable
+  * debian: Fix typo in package description
+
+  [ Pau Espin Pedrol ]
+  * debian: Avoid installing duplicate cfg file in /etc
+  * sql/Makefile: Install hlr_data.sql as example together with hlr.sql
+  * sql/Makefile: Install sql files under doc/.../sql subdir
+  * sql/Makefile: Create empty /var/lib/osmocom directory at install time
+  * Install systemd services with autotools
+  * Move doc/Makefile.am to doc/examples/Makefile.am
+  * Install sample cfg file to /etc/osmocom
+
+  [ Vadim Yanitskiy ]
+  * hlr.c: move deinitialization code from SIGINT handler
+  * hlr.c: free root talloc context on exit
+  * hlr.c: track the use of talloc NULL memory contexts
+  * src/db.c: fix: make sure the database is properly closed
+  * src/db.c: don't ignore the result of db_bootstrap()
+  * hlr_vty_subscr.c: fix subscriber creation command help
+  * Update .gitignore: add missing build products
+  * tests/Makefile.am: also remove temporary sqlite files
+  * hlr_ussd.h: add #pragma once include guard
+  * hlr_ussd.h: use proper libc headers
+  * Update .gitignore: ignore osmo-euse-demo
+  * hlr_ussd.h: drop meaningless forward declaration
+  * USSD/hlr_vty.c: print error if EUSE is not found
+  * hlr_ussd.c: fix: properly print a EUSE / IUSE name
+  * hlr_ussd.c: avoid using CR and NL in IUSE responses
+
+  [ Neels Hofmeyr ]
+  * fix build: adjust test_nodes.vty to logging change
+  * tweak example config
+  * make: always allow running python tests manually
+
+ -- Harald Welte <laforge@gnumonks.org>  Sun, 20 Jan 2019 19:29:58 +0100
+
+osmo-hlr (0.2.1) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * fix luop crash: use buffer for APN that remains valid
+  * add gsup_test to catch OS#3231
+  * add error handling to osmo_gsup_configure_wildcard_apn()
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Fri, 04 May 2018 18:41:35 +0200
+
+osmo-hlr (0.2.0) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * vty: skip installing cmds now always installed by default
+  * hlr_db_tool: fix error log strerror invocation
+  * cosmetic: add comment on ignored return value
+  * db-tool: add command 'create'
+  * db-tool: cosmetic: tweak printf output
+  * db-tool: error-exit on too many arguments
+  * add --enable-sanitize config option
+  * db_test: don't verify SQLite issued error messages, they might change
+  * cosmetic: rx_send_auth_info(): decide error cause with switch()
+  * return GMM_CAUSE_IMSI_UNKNOWN if there is no auth data
+  * db_get_auth_data / db_get_auc: clarify return values
+  * osmo-hlr: log details for unknown IMSI / no auth data / db error
+  * db_test: also test db_get_auc() return values
+  * fix test_subscriber_errors.ctrl after libosmocore change
+  * fix debug log: put 'deriving 2G from 3G' in proper place
+  * ctrl test: fix: adjust expectations after stricter ctrl parsing
+  * fix build: db_test: missing LIBOSMOABIS_CFLAGS and _LIBS
+  * configure: add --enable-werror
+  * jenkins.sh: use --enable-werror configure flag, not CFLAGS
+
+  [ Harald Welte ]
+  * hlr.c: Avoid overflow of lu_operation.subscr.imsi
+  * Fix expected test output after new 'logging print file 1' vty command
+  * osmo-hlr: Add talloc context introspection via VTY
+  * vty: Don't print error if removing auth data while none present
+  * Fix responses to PURGE MS
+
+  [ Alexander Couzens ]
+  * debian: include systemd service osmo-hlr.service
+  * doc: install example .cfg files to $(docdir)/examples/
+  * debian: install osmo-hlr.cfg to /etc/osmocom
+
+  [ Max ]
+  * Remove unused check
+  * Remove unused ipa.py
+  * Enable sanitize for CI tests
+
+  [ Pau Espin Pedrol ]
+  * luop.c: Transform FIXME from warning to pragma message
+  * contrib:jenkins.sh: Enable Werror
+  * use osmo_init_logging2
+  * Remove unused src/db_test.c
+
+  [ Alexander Huemer ]
+  * Add missing build products in .gitignore
+
+  [ Stefan Sperling ]
+  * more robust usage of osmo_timer API for osmo-hlr luop timer
+  * notify GSUP clients when HLR subscriber information changes
+  * rewrite subscriber_update_notify() without calls into luop
+  * don't forget to mark luop as a packet switched connection
+
+ -- Pau Espin Pedrol <pespin@sysmocom.de>  Thu, 03 May 2018 16:27:13 +0200
+
+osmo-hlr (0.1.0) unstable; urgency=medium
+
+  [ Neels Hofmeyr ]
+  * build with autoconf/automake, add jenkins.sh script
+  * fix build on FreeBSD: eliminate implicitly declared functions
+  * fix various compiler warnings
+  * fix DLGSUP logging cat after change in libosmocore
+  * build: recoin db_test as non-installable program
+  * build: actually make sqlite mandatory
+  * bump required libosmocore version to 0.9.5
+  * gsup: send subscriber MSISDN
+  * debug log: log computed vector kinds
+  * log: move a log from info to debug level
+  * hlr.sql: typo in comment
+  * auc.c: typo in comment
+  * main: add and use root talloc ctx
+  * main: add option parsing with db file and default options
+  * main: add VTY and '-c config-file' option
+  * sql: fix 3g_auc's column K data type
+  * cosmetic: sql: indicate VARCHAR size of key columns as 32
+  * sql: auc_3g: set sqn NOT NULL DEFAULT 0
+  * comment: sql: describe auc_2g and auc_3g columns
+  * Add test suite skeleton with empty test (auc_3g_test)
+  * tests: auc_3g_test: implement vector generation test
+  * auth: verify test sets from 3GPP TS 55.205
+  * sql: add unique constraints to IMSI and MSISDN
+  * UMTS AKA resync: fix argument ordering
+  * auc_3g_test: add AUTS resync test
+  * auc_gen_vectors(): ensure sane arguments, test
+  * auc_3g_test: allow to inc fake rand bytes upon rand request
+  * auc_3g_test: add AUTS test with N vectors, to show bug
+  * cosmetic: refactor auc_compute_vectors(), add debug log
+  * auc_compute_vectors(): fix AUTS resync for multiple vectors
+  * cosmetic: auc_3g_test: improve test debugging tools
+  * cosmetic: rename auc_3g_test.c to auc_test.c
+  * fix: properly handle error rc by osmo_gsup_conn_ccm_get()
+  * auc tests: adjust cosmetically to prepare for SQN changes
+  * auc tests: fix after SQN scheme changes from libosmocore
+  * fix debug log: adjust to new SQN increment scheme
+  * UMTS AKA: implement SQN increment according to SEQ and IND
+  * debug log: output ind slot, previous sqn, and sqn db update
+  * jenkins: add value_string termination check
+  * fix db_subscr_ps error handling
+  * add config example (mostly empty)
+  * install hlr.sql in prefix/doc/osmo-hlr/
+  * use OSMO_GSUP_PORT == 4222 instead of hardcoded 2222
+  * add basic CTRL interface tests
+  * add CTRL tests for enable-/disable-/status-ps
+  * cosmetic: prepend DB_STMT_ to enum stmt_idx entries
+  * cosmetic: rename db_subscr_get() to db_subscr_get_by_imsi()
+  * cosmetic: refactor db_bind_imsi() as db_bind_text()
+  * cosmetic: multi-line DB_STMT_AUC_BY_IMSI
+  * cosmetic: log IMSI='<imsi>', log "no such subscriber"
+  * cosmetic: log: "SQLite" with capital L
+  * cosmetic: db_hlr: SL3_TXT: clarify indenting
+  * ctrl_test_runner.py: use proper constant as test db path
+  * gitignore: tests/package.m4
+  * cosmetic: don't log about missing SQLite log cb
+  * add db_bind_int() and db_bind_int64()
+  * add db_subscr_create(), db_subscr_delete(), db_subscr_update_msisdn_by_imsi()
+  * add initial db_test: creating and deleting subscribers
+  * less noise: simplify db_remove_reset()
+  * db: use int64_t as subscriber id
+  * add db_subscr_get_by_msisdn() and db_subscr_get_by_id()
+  * refactor db_subscr_ps() to db_subscr_nam()
+  * refactor db_subscr_lu()
+  * refactor db_subscr_purge
+  * add db_subscr_update_aud_by_id(), complete db_subscr_delete_by_id()
+  * refactor db_get_auth_data return val
+  * code undup: use db_remove_reset() in db_auc.c
+  * fix db_update_sqn(): reset stmt in all error cases
+  * code undup: use db_bind_text() in db_get_auth_data()
+  * debian: 'make check' needs sqlite3, add to Build-Depends
+  * fix db_subscr_get_by_*(): clear output data; test in db_test.c
+  * implement subscriber vty interface, tests
+  * add test_nodes.vty
+  * replace ctrl_test_runner.py with transcript test_subscriber.ctrl
+  * add lu_op_free(), use in luop.c
+  * luop: fix mem leak upon error in lu_op_alloc_conn()
+  * fix mem leak in handle_cmd_ps(): free luop
+  * api doc: say that lu_op_tx_del_subscr_data() doesn't free
+  * add hlr_subsrc_nam to put GSUP client notification in proper API
+  * vty: fix output of empty IMSI
+  * db api: fix/add API docs
+  * cosmetic: tweak params of hlr_controlif_setup()
+  * ctrl: completely replace all CTRL commands
+  * test_subscriber.ctrl: test against octal/hex interpretation of id
+  * jenkins: use osmo-clean-workspace.sh before and after build
+  * tests/Makefile: use test db var instead of repeating the path
+  * db_test: fix *FLAGS
+  * automatically create db tables on osmo-hlr invocation
+  * cosmetic: sql/hlr.sql: move comments
+  * cosmetic: rename SL3_TXT macro, use osmo_strlcpy()
+  * fix default logging levels to NOTICE, not DEBUG
+  * add osmo-hlr-db-tool, program to migrate from osmo-nitb db
+
+  [ Max ]
+  * Add gerrit settings
+  * Add hardcoded APN
+  * Log error cause as a string
+  * Move GSUP msg init into separate function
+  * Use strings for GSUP message type
+  * Move lu_operation into separate file
+  * db: move duplicated code into helper functions
+  * Fix compiler's warning about printf security
+  * Add routines to update nam_ps
+  * Add global HLR struct
+  * Make subscr parameter to db_subscr_get() optional
+  * Add CTRL interface
+  * CTRL: add enable/disable packet service cmds
+  * Add .deb packaging
+  * deb: fix OBS build
+  * debian: remove obsolete dependency
+  * Attempt to fix .deb package
+  * deb: use python in shebang
+  * Another attempt at fixing .deb
+  * Use release helper from libosmocore
+  * Use value string check from osmo-ci
+
+  [ Daniel Willmann ]
+  * Add systemd service file
+  * hlr_data.sql: Insert ki and opc instead of op to example data
+  * tests/auc: Don't require python3
+
+  [ Pau Espin Pedrol ]
+  * VTY: Add hlr node and bind ip field
+  * debian: remove unneeded dependency libdbd-sqlite3
+
+  [ Harald Welte ]
+  * jenkins.sh: Proper error message if local environment isn't set up
+
+  [ Alexander Couzens ]
+  * debian/rules: show testsuite.log when tests are failing
+
+ -- Harald Welte <laforge@gnumonks.org>  Sat, 28 Oct 2017 20:37:33 +0200
+
+osmo-hlr (0.0.1) UNRELEASED; urgency=low
+
+     * Initial release (Closes: OS#1948)
+
+ -- Max Suraev <msuraev@sysmocom.de>  Mon, 13 Mar 2017 16:26:41 +0200

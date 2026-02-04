@@ -1,0 +1,101 @@
+Source: osmo-hlr
+Section: net
+Priority: optional
+Maintainer: Osmocom team <openbsc@lists.osmocom.org>
+Build-Depends: debhelper (>= 10),
+               pkg-config,
+               dh-autoreconf,
+               autotools-dev,
+               python3-minimal,
+               libosmocore-dev (>= 1.11.0),
+               libosmo-abis-dev (>= 2.0.0),
+               libosmo-netif-dev (>= 1.6.0),
+               libsqlite3-dev,
+               sqlite3,
+               osmo-gsm-manuals-dev (>= 1.6.0)
+Standards-Version: 3.9.6
+Vcs-Browser: https://gitea.osmocom.org/cellular-infrastructure/osmo-hlr
+Vcs-Git: https://gitea.osmocom.org/cellular-infrastructure/osmo-hlr
+Homepage: https://projects.osmocom.org/projects/osmo-hlr
+
+Package: osmo-hlr
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Osmocom Home Location Register
+ OsmoHLR is a Osmocom implementation of HLR (Home Location Registrar) which
+ works over GSUP protocol. The subscribers are store in sqlite DB.
+ It supports both 2G and 3G authentication.
+
+Package: osmo-hlr-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: osmo-hlr (= ${binary:Version}), ${misc:Depends}
+Description: Debug symbols for the osmo-hlr
+ Make debugging possible
+
+Package: libosmo-gsup-client0
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends},
+	 ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: Osmocom GSUP (General Subscriber Update Protocol) client library
+  This is a shared library that can be used to implement client programs for
+  the GSUP protocol.  The typical GSUP server is OsmoHLR, with OsmoMSC, OsmoSGSN
+  and External USSD Entities (EUSEs) using this library to implement clients.
+
+Package: libosmo-gsup-client-dev
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+	 libosmo-gsup-client0 (= ${binary:Version}),
+	 libosmocore-dev
+Description: Development headers of Osmocom GSUP client library
+  This is a shared library that can be used to implement client programs for
+  the GSUP protocol.  The typical GSUP server is OsmoHLR, with OsmoMSC, OsmoSGSN
+  and External USSD Entities (EUSEs) using this library to implement clients.
+  .
+  This package contains the development headers.
+
+Package: libosmo-mslookup1
+Section: libs
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Description: Osmocom MS lookup library
+  This shared library contains routines for looking up mobile subscribers.
+
+Package: libosmo-mslookup-dev
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends},
+	 libosmo-mslookup1 (= ${binary:Version}),
+	 libosmocore-dev
+Pre-Depends: ${misc:Pre-Depends}
+Description: Development headers of Osmocom MS lookup library
+  This shared library contains routines for looking up mobile subscribers.
+  .
+  This package contains the development headers.
+
+Package: osmo-mslookup-utils
+Architecture: any
+Section: utils
+Depends: ${shlibs:Depends},
+	 libosmo-mslookup1 (= ${binary:Version}),
+         ${misc:Depends}
+Multi-Arch: same
+Description: Utilities for Osmocom MS lookup
+  This package contains a simple MS lookup client utility.
+
+Package: osmo-hlr-doc
+Architecture: all
+Section: doc
+Priority: optional
+Depends: ${misc:Depends}
+Description: ${misc:Package} PDF documentation
+ Various manuals: user manual, VTY reference manual and/or
+ protocol/interface manuals.
