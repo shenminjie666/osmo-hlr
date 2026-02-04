@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Osmocom MS Lookup Library
+Description: C Utility Library
+Version: UNKNOWN
+Libs: -L${libdir} -ltalloc -losmogsm -losmo-mslookup -losmocore
+Cflags: -I${includedir}/
+
